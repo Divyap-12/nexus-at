@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus-AT</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<div class="page">
+
+    <header class="header">
+        <div>
+            <h1>Nexus-AT</h1>
+            <p>Evidence & Claim Analysis Engine</p>
+        </div>
+        <div class="status">
+            <span class="status-dot"></span>
+            API Ready
+        </div>
+    </header>
+
+    <main>
+
+        <section class="hero">
+            <h2>Analyze a Case</h2>
+            <p>
+                Enter a case narrative and Nexus-AT will extract evidence,
+                assess claims, and summarize the analysis.
+            </p>
+        </section>
+
+        <section class="card input-card">
+
+            <label for="caseId">Case ID</label>
+            <input
+                id="caseId"
+                type="text"
+                placeholder="e.g. C029"
+                value="C029"
+            >
+
+            <label for="narrative">Case Narrative</label>
+            <textarea
+                id="narrative"
+                rows="6"
+                placeholder="Enter the case narrative..."
+            >My father struggles to walk. He may have difficulty walking.</textarea>
+
+            <button id="analyzeButton">
+                Analyze Case
+            </button>
+
+            <p id="error" class="error hidden"></p>
+
+        </section>
+
+        <section id="results" class="results hidden">
+
+            <div class="summary-card">
+                <div>
+                    <span class="section-label">CASE SUMMARY</span>
+                    <h2 id="summaryStatus">—</h2>
+                </div>
+
+                <div class="summary-icon">?</div>
+            </div>
+
+            <div class="card">
+                <div class="section-heading">
+                    <h2>Claims</h2>
+                    <span id="claimCount"></span>
+                </div>
+
+                <div id="claims"></div>
+            </div>
+
+            <div class="card">
+                <div class="section-heading">
+                    <h2>Evidence</h2>
+                    <span id="evidenceCount"></span>
+                </div>
+
+                <div id="evidence"></div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+        Nexus-AT · Evidence and claim analysis engine
+    </footer>
+
+</div>
+
+<script src="/static/app.js"></script>
+
+</body>
+</html>

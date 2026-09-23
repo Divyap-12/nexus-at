@@ -1,0 +1,27 @@
+def _build_claim_assessments(
+    evidence: list[Evidence],
+) -> list[ClaimAssessment]:
+    grouped = group_evidence_by_claim(evidence)
+
+    assessments: list[ClaimAssessment] = []
+
+    for claim, claim_evidence in grouped.items():
+        confidence = max(
+            item.confidence
+            for item in claim_evidence
+        )
+
+        assessments.append(
+            ClaimAssessment(
+                claim=claim,
+                status=determine_claim_status(claim_evidence),
+                functional_domain=claim_evidence[0].functional_domain,
+                evidence_ids=[
+                    item.evidence_id
+                    for item in claim_evidence
+                ],
+                confidence=confidence,
+            )
+        )
+
+    return assessments
