@@ -1,4 +1,4 @@
-from enum import Enum
+﻿from enum import Enum
 
 from pydantic import BaseModel, Field
 
@@ -19,13 +19,14 @@ class ClaimAssessment(BaseModel):
     claim: str
     status: ClaimStatus
     functional_domain: FunctionalDomain
-    evidence_ids: list[str] = Field(default_factory=list)
-    confidence: float
+    evidence_ids: list[str]
+    confidence: float = Field(ge=0.0, le=1.0)
 
 
 class AnalysisResult(BaseModel):
     status: AnalysisStatus
     case: Case
-    relationships: list[EvidenceRelationship] = Field(default_factory=list)
-    claims: list[ClaimAssessment] = Field(default_factory=list)
+    relationships: list[EvidenceRelationship] = []
+    claims: list[ClaimAssessment] = []
     summary: CaseSummaryStatus = CaseSummaryStatus.INCONCLUSIVE
+    explanation: list[str] = []

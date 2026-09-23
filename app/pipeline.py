@@ -1,4 +1,4 @@
-from app.extraction.context import ContextType, detect_context
+﻿from app.extraction.context import ContextType, detect_context
 from app.extraction.rules import find_matching_keyword, find_matching_rules
 from app.reasoning.aggregation import group_evidence_by_domain
 from app.reasoning.claim_status import determine_claim_status
@@ -96,6 +96,8 @@ def _build_claim_assessments(
     return assessments
 
 
+from app.reasoning.explanation import build_explanation
+
 def analyze_case(case_id: str, narrative: str) -> AnalysisResult:
     evidence: list[Evidence] = []
 
@@ -124,6 +126,11 @@ def analyze_case(case_id: str, narrative: str) -> AnalysisResult:
     relationships = build_relationships(evidence)
     claims = _build_claim_assessments(evidence)
     summary = determine_case_summary(claims)
+    explanation = build_explanation(
+        claims,
+        evidence,
+        relationships,
+    )
 
     status = (
         AnalysisStatus.SUCCESS
@@ -142,5 +149,6 @@ def analyze_case(case_id: str, narrative: str) -> AnalysisResult:
         relationships=relationships,
         claims=claims,
         summary=summary,
+        explanation=explanation,
     )
 

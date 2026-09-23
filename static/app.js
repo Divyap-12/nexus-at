@@ -68,6 +68,7 @@ function displayResults(data) {
     renderClaims(claims, evidence);
     renderEvidence(evidence);
     renderRelationships(relationships);
+    renderExplanation(data.explanation || []);
 }
 
 function renderClaims(claims, evidence) {
@@ -243,3 +244,26 @@ function escapeHtml(value) {
         .replaceAll('"', "&quot;")
         .replaceAll("'", "&#039;");
 }
+
+function renderExplanation(explanation) {
+    const container = document.getElementById("explanation");
+
+    if (!container) {
+        return;
+    }
+
+    if (!explanation.length) {
+        container.innerHTML = "<p>No explanation available.</p>";
+        return;
+    }
+
+    container.innerHTML = explanation.map((item, index) => `
+        <div class="explanation-item">
+            <span class="explanation-number">${index + 1}</span>
+            <span class="explanation-text">
+                ${escapeHtml(item)}
+            </span>
+        </div>
+    `).join("");
+}
+
