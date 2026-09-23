@@ -57,6 +57,7 @@ function displayResults(data) {
 
     const claims = data.claims || [];
     const evidence = data.case?.evidence || [];
+    const relationships = data.relationships || [];
 
     document.getElementById("claimCount").textContent =
         `${claims.length} claim${claims.length === 1 ? "" : "s"}`;
@@ -64,8 +65,12 @@ function displayResults(data) {
     document.getElementById("evidenceCount").textContent =
         `${evidence.length} item${evidence.length === 1 ? "" : "s"}`;
 
+    document.getElementById("relationshipCount").textContent =
+        `${relationships.length} relationship${relationships.length === 1 ? "" : "s"}`;
+
     renderClaims(claims);
     renderEvidence(evidence);
+    renderRelationships(relationships);
 }
 
 function renderClaims(claims) {
@@ -130,6 +135,40 @@ function renderEvidence(evidence) {
                     ${escapeHtml(item.functional_domain)}
                 </span>
             </div>
+        </div>
+    `).join("");
+}
+
+function renderRelationships(relationships) {
+    const container = document.getElementById("relationships");
+
+    if (!relationships.length) {
+        container.innerHTML =
+            "<p>No evidence relationships identified.</p>";
+        return;
+    }
+
+    container.innerHTML = relationships.map(item => `
+        <div class="relationship">
+            <span class="evidence-node">
+                ${escapeHtml(item.source_evidence_id)}
+            </span>
+
+            <span class="relationship-arrow">
+                ?
+            </span>
+
+            <span class="relationship-type">
+                ${escapeHtml(item.relationship)}
+            </span>
+
+            <span class="relationship-arrow">
+                ?
+            </span>
+
+            <span class="evidence-node">
+                ${escapeHtml(item.target_evidence_id)}
+            </span>
         </div>
     `).join("");
 }

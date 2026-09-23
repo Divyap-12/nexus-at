@@ -16,6 +16,7 @@
             <h1>Nexus-AT</h1>
             <p>Evidence & Claim Analysis Engine</p>
         </div>
+
         <div class="status">
             <span class="status-dot"></span>
             API Ready
@@ -28,26 +29,28 @@
             <h2>Analyze a Case</h2>
             <p>
                 Enter a case narrative and Nexus-AT will extract evidence,
-                assess claims, and summarize the analysis.
+                assess claims, identify relationships, and summarize the analysis.
             </p>
         </section>
 
         <section class="card input-card">
 
             <label for="caseId">Case ID</label>
+
             <input
                 id="caseId"
                 type="text"
-                placeholder="e.g. C029"
-                value="C029"
+                placeholder="e.g. C030"
+                value="C030"
             >
 
             <label for="narrative">Case Narrative</label>
+
             <textarea
                 id="narrative"
                 rows="6"
                 placeholder="Enter the case narrative..."
-            >My father struggles to walk. He may have difficulty walking.</textarea>
+            >My father struggles to walk. He uses a walking stick. He may have difficulty walking.</textarea>
 
             <button id="analyzeButton">
                 Analyze Case
@@ -84,6 +87,15 @@
                 </div>
 
                 <div id="evidence"></div>
+            </div>
+
+            <div class="card">
+                <div class="section-heading">
+                    <h2>Evidence Relationships</h2>
+                    <span id="relationshipCount"></span>
+                </div>
+
+                <div id="relationships"></div>
             </div>
 
         </section>
