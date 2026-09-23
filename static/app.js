@@ -1,4 +1,4 @@
-const analyzeButton = document.getElementById("analyzeButton");
+﻿const analyzeButton = document.getElementById("analyzeButton");
 const results = document.getElementById("results");
 const errorBox = document.getElementById("error");
 
@@ -65,15 +65,12 @@ function displayResults(data) {
     document.getElementById("evidenceCount").textContent =
         `${evidence.length} item${evidence.length === 1 ? "" : "s"}`;
 
-    document.getElementById("relationshipCount").textContent =
-        `${relationships.length} relationship${relationships.length === 1 ? "" : "s"}`;
-
-    renderClaims(claims);
+    renderClaims(claims, evidence);
     renderEvidence(evidence);
     renderRelationships(relationships);
 }
 
-function renderClaims(claims) {
+function renderClaims(claims, evidence) {
     const container = document.getElementById("claims");
 
     if (!claims.length) {
@@ -81,27 +78,84 @@ function renderClaims(claims) {
         return;
     }
 
-    container.innerHTML = claims.map(claim => `
-        <div class="claim">
-            <div class="claim-text">
-                ${escapeHtml(claim.claim)}
+    const evidenceById = new Map(
+        evidence.map(item => [item.evidence_id, item])
+    );
+
+    container.innerHTML = claims.map(claim => {
+        const linkedEvidence = (claim.evidence_ids || [])
+            .map(id => evidenceById.get(id))
+            .filter(Boolean);
+
+        return `
+            <div class="claim">
+                <div class="claim-text">
+                    ${escapeHtml(claim.claim)}
+                </div>
+
+                <div class="meta">
+                    <span class="badge">
+                        Status: ${escapeHtml(claim.status)}
+                    </span>
+
+                    <span class="badge">
+                        Domain: ${escapeHtml(claim.functional_domain)}
+                    </span>
+
+                    <span class="badge">
+                        Confidence: ${escapeHtml(String(claim.confidence))}
+                    </span>
+                </div>
+
+                <div class="claim-trace">
+                    <div class="trace-title">
+                        Evidence for this claim
+                    </div>
+
+                    ${
+                        linkedEvidence.length
+                            ? linkedEvidence.map(item => `
+                                <div class="trace-item">
+                                    <div class="trace-header">
+                                        <strong>
+                                            ${escapeHtml(item.evidence_id)}
+                                        </strong>
+
+                                        <span class="badge">
+                                            ${escapeHtml(item.evidence_type)}
+                                        </span>
+                                    </div>
+
+                                    <div class="trace-text">
+                                        "${escapeHtml(item.text_span)}"
+                                    </div>
+
+                                    <div class="trace-source">
+                                        Source: ${escapeHtml(item.source_text)}
+                                    </div>
+
+                                    <div class="meta">
+                                        <span class="badge">
+                                            ${escapeHtml(item.temporal_status)}
+                                        </span>
+
+                                        <span class="badge">
+                                            ${escapeHtml(item.functional_domain)}
+                                        </span>
+
+                                        <span class="badge">
+                                            Confidence:
+                                            ${escapeHtml(String(item.confidence))}
+                                        </span>
+                                    </div>
+                                </div>
+                            `).join("")
+                            : "<p class=\"trace-empty\">No linked evidence.</p>"
+                    }
+                </div>
             </div>
-
-            <div class="meta">
-                <span class="badge">
-                    Status: ${escapeHtml(claim.status)}
-                </span>
-
-                <span class="badge">
-                    Domain: ${escapeHtml(claim.functional_domain)}
-                </span>
-
-                <span class="badge">
-                    Confidence: ${escapeHtml(String(claim.confidence))}
-                </span>
-            </div>
-        </div>
-    `).join("");
+        `;
+    }).join("");
 }
 
 function renderEvidence(evidence) {
@@ -114,6 +168,10 @@ function renderEvidence(evidence) {
 
     container.innerHTML = evidence.map(item => `
         <div class="evidence-item">
+            <div class="evidence-header">
+                <strong>${escapeHtml(item.evidence_id)}</strong>
+            </div>
+
             <div class="evidence-text">
                 "${escapeHtml(item.text_span)}"
             </div>
@@ -134,6 +192,10 @@ function renderEvidence(evidence) {
                 <span class="badge">
                     ${escapeHtml(item.functional_domain)}
                 </span>
+
+                <span class="badge">
+                    Confidence: ${escapeHtml(String(item.confidence))}
+                </span>
             </div>
         </div>
     `).join("");
@@ -142,33 +204,28 @@ function renderEvidence(evidence) {
 function renderRelationships(relationships) {
     const container = document.getElementById("relationships");
 
+    if (!container) {
+        return;
+    }
+
     if (!relationships.length) {
-        container.innerHTML =
-            "<p>No evidence relationships identified.</p>";
+        container.innerHTML = "<p>No evidence relationships identified.</p>";
         return;
     }
 
     container.innerHTML = relationships.map(item => `
-        <div class="relationship">
-            <span class="evidence-node">
+        <div class="relationship-item">
+            <div class="relationship-node">
                 ${escapeHtml(item.source_evidence_id)}
-            </span>
+            </div>
 
-            <span class="relationship-arrow">
-                ?
-            </span>
-
-            <span class="relationship-type">
+            <div class="relationship-arrow">
                 ${escapeHtml(item.relationship)}
-            </span>
+            </div>
 
-            <span class="relationship-arrow">
-                ?
-            </span>
-
-            <span class="evidence-node">
+            <div class="relationship-node">
                 ${escapeHtml(item.target_evidence_id)}
-            </span>
+            </div>
         </div>
     `).join("");
 }
