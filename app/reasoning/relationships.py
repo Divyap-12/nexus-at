@@ -31,11 +31,8 @@ def compare_evidence(
         )
 
     if (
-        source_type == "DIRECT"
-        and target_type == "CONTRADICTED"
-    ) or (
         source_type == "CONTRADICTED"
-        and target_type == "DIRECT"
+        or target_type == "CONTRADICTED"
     ):
         return EvidenceRelationship(
             source_evidence_id=source_evidence_id,

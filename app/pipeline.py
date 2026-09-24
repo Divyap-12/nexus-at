@@ -1,4 +1,4 @@
-﻿from app.extraction.context import ContextType, detect_context
+from app.extraction.context import ContextType, detect_context
 from app.extraction.rules import find_matching_keyword, find_matching_rules
 from app.reasoning.aggregation import group_evidence_by_domain
 from app.reasoning.claim_status import determine_claim_status
@@ -9,6 +9,7 @@ from app.schemas.case import Case
 from app.schemas.evidence import (
     Evidence,
     EvidenceType,
+    EvidenceStrength,
     FunctionalDomain,
     TemporalStatus,
 )
@@ -38,6 +39,21 @@ def _evidence_type(context: ContextType) -> EvidenceType:
 
     return EvidenceType.DIRECT
 
+
+def _evidence_strength(context: ContextType) -> EvidenceStrength:
+    if context == ContextType.NEGATED:
+        return EvidenceStrength.STRONG
+
+    if context == ContextType.UNCERTAIN:
+        return EvidenceStrength.WEAK
+
+    if context in {
+        ContextType.HISTORICAL,
+        ContextType.PLANNED,
+    }:
+        return EvidenceStrength.MODERATE
+
+    return EvidenceStrength.STRONG
 
 def _confidence(context: ContextType) -> float:
     if context == ContextType.NEGATED:
@@ -115,6 +131,7 @@ def analyze_case(case_id: str, narrative: str) -> AnalysisResult:
                     source_text=sentence,
                     claim=rule.claim,
                     evidence_type=_evidence_type(context),
+                    strength=_evidence_strength(context),
                     functional_domain=FunctionalDomain(
                         rule.functional_domain
                     ),
@@ -151,4 +168,3 @@ def analyze_case(case_id: str, narrative: str) -> AnalysisResult:
         summary=summary,
         explanation=explanation,
     )
-

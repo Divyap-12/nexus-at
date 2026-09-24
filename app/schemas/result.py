@@ -20,6 +20,7 @@ class ClaimAssessment(BaseModel):
     status: ClaimStatus
     functional_domain: FunctionalDomain
     evidence_ids: list[str]
+    evidence_types: list[str]
     confidence: float = Field(ge=0.0, le=1.0)
 
 

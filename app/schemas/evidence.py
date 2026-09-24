@@ -12,6 +12,12 @@ class EvidenceType(str, Enum):
     CONTRADICTED = "CONTRADICTED"
 
 
+class EvidenceStrength(str, Enum):
+    STRONG = "STRONG"
+    MODERATE = "MODERATE"
+    WEAK = "WEAK"
+
+
 class FunctionalDomain(str, Enum):
     MOBILITY = "MOBILITY"
     VISION = "VISION"
@@ -38,6 +44,7 @@ class Evidence(BaseModel):
     claim: str = Field(min_length=1)
 
     evidence_type: EvidenceType
+    strength: EvidenceStrength
     functional_domain: FunctionalDomain
     temporal_status: TemporalStatus
 

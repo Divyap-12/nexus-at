@@ -76,3 +76,41 @@ def test_contradicted_evidence_is_reported():
     claim = result.claims[0]
 
     assert claim.status == ClaimStatus.CONFLICTING
+
+def test_inferred_and_contradicted_evidence_produces_contradiction_relationship():
+    result = analyze_case(
+        "T006",
+        "My father may have difficulty walking. "
+        "He does not struggle to walk."
+    )
+
+    assert result.relationships
+
+    relationships = [
+        relationship.relationship
+        for relationship in result.relationships
+    ]
+
+    assert RelationshipType.CONTRADICTS in relationships
+from app.pipeline import analyze_case
+
+
+def test_claim_contains_evidence_types():
+    result = analyze_case(
+        "T010",
+        "My father struggles to walk. "
+        "He may have difficulty walking. "
+        "He does not struggle to walk."
+    )
+
+    assert len(result.claims) == 1
+
+    claim = result.claims[0]
+
+    assert claim.evidence_types == [
+        "DIRECT",
+        "INFERRED",
+        "CONTRADICTED",
+    ]
+
+    assert claim.status.value == "CONFLICTING"
