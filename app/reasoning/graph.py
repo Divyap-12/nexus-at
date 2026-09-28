@@ -1,5 +1,8 @@
-from app.schemas.evidence import Evidence
-from app.reasoning.relationships import EvidenceRelationship, compare_evidence
+﻿from app.schemas.evidence import Evidence
+from app.reasoning.relationships import (
+    EvidenceRelationship,
+    compare_evidence,
+)
 
 
 def build_relationships(
@@ -13,9 +16,11 @@ def build_relationships(
                 source_evidence_id=source.evidence_id,
                 source_claim=source.claim,
                 source_type=source.evidence_type.value,
+                source_temporal_status=source.temporal_status.value,
                 target_evidence_id=target.evidence_id,
                 target_claim=target.claim,
                 target_type=target.evidence_type.value,
+                target_temporal_status=target.temporal_status.value,
             )
 
             if relationship.relationship.value != "UNRELATED":

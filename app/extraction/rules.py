@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+﻿from dataclasses import dataclass
 
 
 @dataclass(frozen=True)
@@ -10,6 +10,19 @@ class ExtractionRule:
 
 
 MOBILITY_RULES = (
+    ExtractionRule(
+        name="limited_walking_distance",
+        keywords=(
+            "cannot walk long distances",
+            "can't walk long distances",
+            "unable to walk long distances",
+            "cannot walk far",
+            "can't walk far",
+            "unable to walk far",
+        ),
+        claim="Person has limited walking distance.",
+        functional_domain="MOBILITY",
+    ),
     ExtractionRule(
         name="walking_difficulty",
         keywords=(
@@ -58,13 +71,33 @@ def find_matching_keyword(
 def find_matching_rules(text: str) -> list[ExtractionRule]:
     normalized_text = text.lower()
 
-    matches: list[ExtractionRule] = []
+    matches: list[tuple[ExtractionRule, str]] = []
 
     for rule in MOBILITY_RULES:
-        if any(
-            keyword in normalized_text
+        matching_keywords = [
+            keyword
             for keyword in rule.keywords
-        ):
-            matches.append(rule)
+            if keyword in normalized_text
+        ]
 
-    return matches
+        if matching_keywords:
+            longest_keyword = max(
+                matching_keywords,
+                key=len,
+            )
+            matches.append((rule, longest_keyword))
+
+    selected: list[ExtractionRule] = []
+
+    for rule, keyword in matches:
+        is_shadowed = any(
+            other_keyword != keyword
+            and len(other_keyword) > len(keyword)
+            and keyword in other_keyword
+            for _, other_keyword in matches
+        )
+
+        if not is_shadowed:
+            selected.append(rule)
+
+    return selected
