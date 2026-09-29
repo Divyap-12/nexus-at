@@ -68,3 +68,36 @@ def test_recurrence_after_walking_claim_still_reuses_walking_claim():
 
     assert current.claim == "Person reports difficulty walking."
     assert current.functional_domain.value == "MOBILITY"
+
+
+def test_recurrence_resolves_previous_mobility_claim_after_other_claim():
+    result = analyze_case(
+        "RC006",
+        "My father struggles to walk. "
+        "He uses a wheelchair. "
+        "But now he struggles again.",
+    )
+
+    current = result.case.evidence[-1]
+
+    assert current.claim == "Person reports difficulty walking."
+    assert current.functional_domain.value == "MOBILITY"
+
+
+def test_recurrence_does_not_copy_unrelated_previous_claim():
+    result = analyze_case(
+        "RC007",
+        "My father uses a wheelchair. "
+        "But now he struggles again.",
+    )
+
+    assert len(result.case.evidence) == 1
+
+
+def test_recurrence_without_any_previous_evidence_creates_no_evidence():
+    result = analyze_case(
+        "RC008",
+        "But now he struggles again.",
+    )
+
+    assert len(result.case.evidence) == 0

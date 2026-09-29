@@ -10,6 +10,31 @@ RECURRENCE_MARKERS = (
 )
 
 
+RECURRENCE_TERMS = {
+    "walking_difficulty": (
+        "struggle",
+        "struggles",
+        "struggling",
+        "struggled",
+        "trouble",
+        "difficulty",
+        "difficult",
+        "hard",
+        "walk",
+        "walking",
+        "walks",
+    ),
+    "limited_walking_distance": (
+        "walk",
+        "walking",
+        "walks",
+        "far",
+        "distance",
+        "distances",
+    ),
+}
+
+
 def is_recurrence(text: str) -> bool:
     normalized = text.lower()
 
@@ -31,29 +56,19 @@ def find_recurrence_rule(
 
     normalized = text.lower()
 
-    # Try to match a meaningful verb/activity from the recurrence
-    # against previously established rules, preferring the most
-    # semantically compatible rule rather than simply using the
-    # immediately previous rule.
-    recurrence_terms = (
-        "struggle",
-        "struggles",
-        "struggling",
-        "struggled",
-        "trouble",
-        "difficulty",
-        "difficult",
-        "hard",
-        "walk",
-        "walking",
-        "walks",
-    )
-
-    if not any(term in normalized for term in recurrence_terms):
-        return None
-
     for rule in reversed(previous_rules):
-        if rule.name == "walking_difficulty":
+        terms = RECURRENCE_TERMS.get(rule.name)
+
+        if not terms:
+            continue
+
+        if any(
+            re.search(
+                rf"\b{re.escape(term)}\b",
+                normalized,
+            )
+            for term in terms
+        ):
             return rule
 
     return None
