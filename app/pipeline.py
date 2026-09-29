@@ -1,4 +1,5 @@
 from app.extraction.context import ContextType, detect_context, detect_temporal_context
+from app.extraction.clauses import split_clauses
 from app.extraction.rules import find_matching_keyword, find_matching_rules
 from app.reasoning.aggregation import group_evidence_by_domain
 from app.reasoning.claim_status import determine_claim_status
@@ -72,27 +73,7 @@ def _confidence(context: ContextType) -> float:
 
 
 def _split_sentences(narrative: str) -> list[str]:
-    sentences: list[str] = []
-
-    for sentence in narrative.split("."):
-        sentence = sentence.strip()
-
-        if not sentence:
-            continue
-
-        parts = [
-            part.strip()
-            for part in __import__("re").split(
-                r"\bbut\b",
-                sentence,
-                flags=__import__("re").IGNORECASE,
-            )
-            if part.strip()
-        ]
-
-        sentences.extend(parts)
-
-    return sentences
+    return split_clauses(narrative)
 
 
 def _build_claim_assessments(
