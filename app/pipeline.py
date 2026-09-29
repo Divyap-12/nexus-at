@@ -1,6 +1,7 @@
 from app.extraction.context import ContextType, detect_context, detect_temporal_context
 from app.extraction.clauses import split_clauses
 from app.extraction.rules import find_matching_keyword, find_matching_rules
+from app.extraction.recurrence import is_recurrence
 from app.reasoning.aggregation import group_evidence_by_domain
 from app.reasoning.claim_status import determine_claim_status
 from app.reasoning.claims import group_evidence_by_claim
@@ -55,6 +56,7 @@ def _evidence_strength(context: ContextType) -> EvidenceStrength:
         return EvidenceStrength.MODERATE
 
     return EvidenceStrength.STRONG
+
 
 def _confidence(context: ContextType) -> float:
     if context == ContextType.NEGATED:
@@ -111,16 +113,27 @@ def _build_claim_assessments(
 
 from app.reasoning.explanation import build_explanation
 
+
 def analyze_case(case_id: str, narrative: str) -> AnalysisResult:
     evidence: list[Evidence] = []
+    last_rule = None
 
     for sentence in _split_sentences(narrative):
         rules = find_matching_rules(sentence)
+
+        recurrence = is_recurrence(sentence)
+
+        if not rules and recurrence and last_rule is not None:
+            rules = [last_rule]
+
         context = detect_context(sentence)
         temporal_context = detect_temporal_context(sentence)
 
         for rule in rules:
-            matched_text = find_matching_keyword(sentence, rule)
+            if recurrence:
+                matched_text = sentence
+            else:
+                matched_text = find_matching_keyword(sentence, rule)
 
             evidence.append(
                 Evidence(
@@ -138,9 +151,12 @@ def analyze_case(case_id: str, narrative: str) -> AnalysisResult:
                 )
             )
 
+            last_rule = rule
+
     relationships = build_relationships(evidence)
     claims = _build_claim_assessments(evidence)
     summary = determine_case_summary(claims)
+
     explanation = build_explanation(
         claims,
         evidence,
@@ -158,6 +174,7 @@ def analyze_case(case_id: str, narrative: str) -> AnalysisResult:
         narrative=narrative,
         evidence=evidence,
     )
+
     return AnalysisResult(
         status=status,
         case=case,
