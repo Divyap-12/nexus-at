@@ -236,4 +236,70 @@ EVALUATION_CASES = (
         expected_evidence_types=("DIRECT", "INFERRED", "DIRECT"),
     ),
 
+    EvaluationCase(
+        case_id="EV021",
+        narrative="My father has trouble walking.",
+        expected_evidence_count=1,
+        expected_claims=(
+            "Person reports difficulty walking.",
+        ),
+        expected_temporal_statuses=("CURRENT",),
+        expected_evidence_types=("DIRECT",),
+    ),
+
+    EvaluationCase(
+        case_id="EV022",
+        narrative="Walking is difficult for my father.",
+        expected_evidence_count=1,
+        expected_claims=(
+            "Person reports difficulty walking.",
+        ),
+        expected_temporal_statuses=("CURRENT",),
+        expected_evidence_types=("DIRECT",),
+    ),
+
+    EvaluationCase(
+        case_id="EV023",
+        narrative="My father finds it hard to walk.",
+        expected_evidence_count=1,
+        expected_claims=(
+            "Person reports difficulty walking.",
+        ),
+        expected_temporal_statuses=("CURRENT",),
+        expected_evidence_types=("DIRECT",),
+    ),
+
+    EvaluationCase(
+        case_id="EV024",
+        narrative="My father does not have trouble walking anymore.",
+        expected_evidence_count=1,
+        expected_claims=(
+            "Person reports difficulty walking.",
+        ),
+        expected_temporal_statuses=("CURRENT",),
+        expected_evidence_types=("CONTRADICTED",),
+    ),
+
+    EvaluationCase(
+        case_id="EV025",
+        narrative="My father might have trouble walking.",
+        expected_evidence_count=1,
+        expected_claims=(
+            "Person reports difficulty walking.",
+        ),
+        expected_temporal_statuses=("CURRENT",),
+        expected_evidence_types=("INFERRED",),
+    ),
+
+    EvaluationCase(
+        case_id="EV026",
+        narrative="My father struggled to walk last year.",
+        expected_evidence_count=1,
+        expected_claims=(
+            "Person reports difficulty walking.",
+        ),
+        expected_temporal_statuses=("HISTORICAL",),
+        expected_evidence_types=("DIRECT",),
+    ),
+
 )
