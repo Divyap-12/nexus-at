@@ -302,4 +302,40 @@ EVALUATION_CASES = (
         expected_evidence_types=("DIRECT",),
     ),
 
+    EvaluationCase(
+        case_id="EV027",
+        narrative="My father used to struggle to walk, but now he has trouble walking.",
+        expected_evidence_count=2,
+        expected_claims=(
+            "Person reports difficulty walking.",
+            "Person reports difficulty walking.",
+        ),
+        expected_temporal_statuses=("HISTORICAL", "CURRENT"),
+        expected_evidence_types=("DIRECT", "DIRECT"),
+    ),
+
+    EvaluationCase(
+        case_id="EV028",
+        narrative="My father might have trouble walking, but he uses a walking stick.",
+        expected_evidence_count=2,
+        expected_claims=(
+            "Person reports difficulty walking.",
+            "Person uses a mobility aid.",
+        ),
+        expected_temporal_statuses=("CURRENT", "CURRENT"),
+        expected_evidence_types=("INFERRED", "DIRECT"),
+    ),
+
+    EvaluationCase(
+        case_id="EV029",
+        narrative="My father does not have trouble walking, but he uses a walking stick.",
+        expected_evidence_count=2,
+        expected_claims=(
+            "Person reports difficulty walking.",
+            "Person uses a mobility aid.",
+        ),
+        expected_temporal_statuses=("CURRENT", "CURRENT"),
+        expected_evidence_types=("CONTRADICTED", "DIRECT"),
+    ),
+
 )
