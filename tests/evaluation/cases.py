@@ -338,4 +338,177 @@ EVALUATION_CASES = (
         expected_evidence_types=("CONTRADICTED", "DIRECT"),
     ),
 
+    EvaluationCase(
+        case_id="EV030",
+        narrative="My father has trouble walking and uses a wheelchair.",
+        expected_evidence_count=2,
+        expected_claims=(
+            "Person reports difficulty walking.",
+            "Person uses a mobility aid.",
+        ),
+        expected_temporal_statuses=("CURRENT", "CURRENT"),
+        expected_evidence_types=("DIRECT", "DIRECT"),
+    ),
+
+    EvaluationCase(
+        case_id="EV031",
+        narrative="My father previously struggled to walk, but now he uses a walking stick.",
+        expected_evidence_count=2,
+        expected_claims=(
+            "Person reports difficulty walking.",
+            "Person uses a mobility aid.",
+        ),
+        expected_temporal_statuses=("HISTORICAL", "CURRENT"),
+        expected_evidence_types=("DIRECT", "DIRECT"),
+    ),
+
+    EvaluationCase(
+        case_id="EV032",
+        narrative="My father might have trouble walking, but he currently uses a wheelchair.",
+        expected_evidence_count=2,
+        expected_claims=(
+            "Person reports difficulty walking.",
+            "Person uses a mobility aid.",
+        ),
+        expected_temporal_statuses=("CURRENT", "CURRENT"),
+        expected_evidence_types=("INFERRED", "DIRECT"),
+    ),
+
+    EvaluationCase(
+        case_id="EV033",
+        narrative="My father does not have trouble walking, but he uses a wheelchair.",
+        expected_evidence_count=2,
+        expected_claims=(
+            "Person reports difficulty walking.",
+            "Person uses a mobility aid.",
+        ),
+        expected_temporal_statuses=("CURRENT", "CURRENT"),
+        expected_evidence_types=("CONTRADICTED", "DIRECT"),
+    ),
+
+    EvaluationCase(
+        case_id="EV034",
+        narrative="My father plans to use a walking stick, but he currently has trouble walking.",
+        expected_evidence_count=2,
+        expected_claims=(
+            "Person uses a mobility aid.",
+            "Person reports difficulty walking.",
+        ),
+        expected_temporal_statuses=("PLANNED", "CURRENT"),
+        expected_evidence_types=("DIRECT", "DIRECT"),
+    ),
+
+    EvaluationCase(
+        case_id="EV035",
+        narrative="My father previously did not have trouble walking.",
+        expected_evidence_count=1,
+        expected_claims=(
+            "Person reports difficulty walking.",
+        ),
+        expected_temporal_statuses=("HISTORICAL",),
+        expected_evidence_types=("CONTRADICTED",),
+    ),
+
+    EvaluationCase(
+        case_id="EV036",
+        narrative="My father might not have trouble walking.",
+        expected_evidence_count=1,
+        expected_claims=(
+            "Person reports difficulty walking.",
+        ),
+        expected_temporal_statuses=("CURRENT",),
+        expected_evidence_types=("CONTRADICTED",),
+    ),
+
+    EvaluationCase(
+        case_id="EV037",
+        narrative="My father previously planned to use a walking stick.",
+        expected_evidence_count=1,
+        expected_claims=(
+            "Person uses a mobility aid.",
+        ),
+        expected_temporal_statuses=("HISTORICAL",),
+        expected_evidence_types=("DIRECT",),
+    ),
+
+    EvaluationCase(
+        case_id="EV038",
+        narrative="My father might plan to use a walking stick.",
+        expected_evidence_count=1,
+        expected_claims=(
+            "Person uses a mobility aid.",
+        ),
+        expected_temporal_statuses=("CURRENT",),
+        expected_evidence_types=("INFERRED",),
+    ),
+
+    EvaluationCase(
+        case_id="EV039",
+        narrative="My father does not currently use a walking stick.",
+        expected_evidence_count=1,
+        expected_claims=(
+            "Person uses a mobility aid.",
+        ),
+        expected_temporal_statuses=("CURRENT",),
+        expected_evidence_types=("CONTRADICTED",),
+    ),
+
+    EvaluationCase(
+        case_id="EV040",
+        narrative="My father has trouble walking. He enjoys reading books.",
+        expected_evidence_count=1,
+        expected_claims=(
+            "Person reports difficulty walking.",
+        ),
+        expected_temporal_statuses=("CURRENT",),
+        expected_evidence_types=("DIRECT",),
+    ),
+
+    EvaluationCase(
+        case_id="EV041",
+        narrative="My father has trouble walking. He uses a walking stick.",
+        expected_evidence_count=2,
+        expected_claims=(
+            "Person reports difficulty walking.",
+            "Person uses a mobility aid.",
+        ),
+        expected_temporal_statuses=("CURRENT", "CURRENT"),
+        expected_evidence_types=("DIRECT", "DIRECT"),
+    ),
+
+    EvaluationCase(
+        case_id="EV042",
+        narrative="My father used to have trouble walking. He currently walks normally.",
+        expected_evidence_count=1,
+        expected_claims=(
+            "Person reports difficulty walking.",
+        ),
+        expected_temporal_statuses=("HISTORICAL",),
+        expected_evidence_types=("DIRECT",),
+    ),
+
+    EvaluationCase(
+        case_id="EV043",
+        narrative="My father might have trouble walking. He does not use a walking stick.",
+        expected_evidence_count=2,
+        expected_claims=(
+            "Person reports difficulty walking.",
+            "Person uses a mobility aid.",
+        ),
+        expected_temporal_statuses=("CURRENT", "CURRENT"),
+        expected_evidence_types=("INFERRED", "CONTRADICTED"),
+    ),
+
+    EvaluationCase(
+        case_id="EV044",
+        narrative="My father plans to use a walker. He has trouble walking.",
+        expected_evidence_count=2,
+        expected_claims=(
+            "Person uses a mobility aid.",
+            "Person reports difficulty walking.",
+        ),
+        expected_temporal_statuses=("PLANNED", "CURRENT"),
+        expected_evidence_types=("DIRECT", "DIRECT"),
+    ),
+
 )

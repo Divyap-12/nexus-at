@@ -1,4 +1,4 @@
-from app.extraction.context import ContextType, detect_context
+from app.extraction.context import ContextType, detect_context, detect_temporal_context
 from app.extraction.rules import find_matching_keyword, find_matching_rules
 from app.reasoning.aggregation import group_evidence_by_domain
 from app.reasoning.claim_status import determine_claim_status
@@ -136,6 +136,7 @@ def analyze_case(case_id: str, narrative: str) -> AnalysisResult:
     for sentence in _split_sentences(narrative):
         rules = find_matching_rules(sentence)
         context = detect_context(sentence)
+        temporal_context = detect_temporal_context(sentence)
 
         for rule in rules:
             matched_text = find_matching_keyword(sentence, rule)
@@ -151,7 +152,7 @@ def analyze_case(case_id: str, narrative: str) -> AnalysisResult:
                     functional_domain=FunctionalDomain(
                         rule.functional_domain
                     ),
-                    temporal_status=_temporal_status(context),
+                    temporal_status=_temporal_status(temporal_context),
                     confidence=_confidence(context),
                 )
             )

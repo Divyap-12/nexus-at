@@ -24,8 +24,14 @@ NEGATION_MARKERS = (
     "no longer",
     "does not",
     "doesn't",
+    "did not",
+    "didn't",
     "do not",
     "don't",
+    "might not",
+    "may not",
+    "could not",
+    "couldn't",
     "isn't",
     "is not",
     "are not",
@@ -73,6 +79,24 @@ def detect_context(text: str) -> ContextType:
         return ContextType.UNCERTAIN
 
     if any(_contains_marker(normalized, marker) for marker in PLANNED_MARKERS):
+        return ContextType.PLANNED
+
+    return ContextType.CURRENT
+
+
+def detect_temporal_context(text: str) -> ContextType:
+    normalized = text.lower()
+
+    if any(
+        _contains_marker(normalized, marker)
+        for marker in HISTORICAL_MARKERS
+    ):
+        return ContextType.HISTORICAL
+
+    if any(
+        _contains_marker(normalized, marker)
+        for marker in PLANNED_MARKERS
+    ):
         return ContextType.PLANNED
 
     return ContextType.CURRENT
