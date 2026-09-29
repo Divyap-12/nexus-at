@@ -72,11 +72,27 @@ def _confidence(context: ContextType) -> float:
 
 
 def _split_sentences(narrative: str) -> list[str]:
-    return [
-        sentence.strip()
-        for sentence in narrative.split(".")
-        if sentence.strip()
-    ]
+    sentences: list[str] = []
+
+    for sentence in narrative.split("."):
+        sentence = sentence.strip()
+
+        if not sentence:
+            continue
+
+        parts = [
+            part.strip()
+            for part in __import__("re").split(
+                r"\bbut\b",
+                sentence,
+                flags=__import__("re").IGNORECASE,
+            )
+            if part.strip()
+        ]
+
+        sentences.extend(parts)
+
+    return sentences
 
 
 def _build_claim_assessments(
