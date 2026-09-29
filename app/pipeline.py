@@ -1,7 +1,7 @@
 from app.extraction.context import ContextType, detect_context, detect_temporal_context
 from app.extraction.clauses import split_clauses
 from app.extraction.rules import find_matching_keyword, find_matching_rules
-from app.extraction.recurrence import is_recurrence
+from app.extraction.recurrence import find_recurrence_rule
 from app.reasoning.aggregation import group_evidence_by_domain
 from app.reasoning.claim_status import determine_claim_status
 from app.reasoning.claims import group_evidence_by_claim
@@ -116,21 +116,24 @@ from app.reasoning.explanation import build_explanation
 
 def analyze_case(case_id: str, narrative: str) -> AnalysisResult:
     evidence: list[Evidence] = []
-    last_rule = None
+    previous_rules = []
 
     for sentence in _split_sentences(narrative):
         rules = find_matching_rules(sentence)
 
-        recurrence = is_recurrence(sentence)
+        recurrence_rule = find_recurrence_rule(
+            sentence,
+            previous_rules,
+        )
 
-        if not rules and recurrence and last_rule is not None:
-            rules = [last_rule]
+        if not rules and recurrence_rule is not None:
+            rules = [recurrence_rule]
 
         context = detect_context(sentence)
         temporal_context = detect_temporal_context(sentence)
 
         for rule in rules:
-            if recurrence:
+            if recurrence_rule is not None:
                 matched_text = sentence
             else:
                 matched_text = find_matching_keyword(sentence, rule)
@@ -151,7 +154,7 @@ def analyze_case(case_id: str, narrative: str) -> AnalysisResult:
                 )
             )
 
-            last_rule = rule
+            previous_rules.append(rule)
 
     relationships = build_relationships(evidence)
     claims = _build_claim_assessments(evidence)
