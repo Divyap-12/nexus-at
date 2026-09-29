@@ -1,4 +1,4 @@
-﻿from app.schemas.evidence import Evidence
+from app.schemas.evidence import Evidence
 from app.reasoning.relationships import EvidenceRelationship
 
 
@@ -67,10 +67,24 @@ def build_explanation(
             )
 
     for relationship in relationships:
+        source = evidence_by_id.get(
+            relationship.source_evidence_id
+        )
+        target = evidence_by_id.get(
+            relationship.target_evidence_id
+        )
+
+        if source is None or target is None:
+            continue
+
         explanation.append(
-            f"{relationship.source_evidence_id} "
+            f"{source.evidence_id} "
+            f"{source.evidence_type.value} "
+            f"{source.temporal_status.value} "
             f"{relationship.relationship.value} "
-            f"{relationship.target_evidence_id}."
+            f"{target.evidence_id} "
+            f"{target.evidence_type.value} "
+            f"{target.temporal_status.value}."
         )
 
     return explanation
