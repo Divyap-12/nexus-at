@@ -1,7 +1,7 @@
 from app.extraction.context import ContextType, detect_context, detect_temporal_context
 from app.extraction.clauses import split_clauses
 from app.extraction.rules import find_matching_keyword, find_matching_rules
-from app.extraction.recurrence import find_recurrence_rule
+from app.extraction.recurrence import find_recurrence_rule, find_recurrence_rule_from_claims
 from app.reasoning.aggregation import group_evidence_by_domain
 from app.reasoning.claim_status import determine_claim_status
 from app.reasoning.claims import group_evidence_by_claim
@@ -125,6 +125,12 @@ def analyze_case(case_id: str, narrative: str) -> AnalysisResult:
             sentence,
             previous_rules,
         )
+
+        if recurrence_rule is None:
+            recurrence_rule = find_recurrence_rule_from_claims(
+                sentence,
+                previous_rules,
+            )
 
         if not rules and recurrence_rule is not None:
             rules = [recurrence_rule]

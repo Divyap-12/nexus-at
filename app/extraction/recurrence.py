@@ -7,6 +7,12 @@ RECURRENCE_MARKERS = (
     "again",
     "once more",
     "once again",
+    "returned",
+    "has returned",
+    "have returned",
+    "came back",
+    "come back",
+    "returned again",
 )
 
 
@@ -70,5 +76,43 @@ def find_recurrence_rule(
             for term in terms
         ):
             return rule
+
+    return None
+
+
+def find_recurrence_rule_from_claims(
+    text: str,
+    previous_rules: list[ExtractionRule],
+) -> ExtractionRule | None:
+    if not is_recurrence(text):
+        return None
+
+    if not previous_rules:
+        return None
+
+    normalized = text.lower()
+
+    if any(
+        re.search(
+            rf"\b{re.escape(marker)}\b",
+            normalized,
+        )
+        for marker in (
+            "the problem has returned",
+            "the problem returned",
+            "the problem came back",
+            "the issue has returned",
+            "the issue returned",
+            "the issue came back",
+        )
+    ):
+        unique_rules = []
+
+        for rule in previous_rules:
+            if rule not in unique_rules:
+                unique_rules.append(rule)
+
+        if len(unique_rules) == 1:
+            return unique_rules[0]
 
     return None
