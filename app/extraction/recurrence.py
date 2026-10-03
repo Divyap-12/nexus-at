@@ -113,6 +113,11 @@ def find_recurrence_rule_from_claims(
                 unique_rules.append(rule)
 
         if len(unique_rules) == 1:
-            return unique_rules[0]
+            rule = unique_rules[0]
+
+            if rule.name == "walking_difficulty":
+                return rule
+
+    return None
 
     return None
